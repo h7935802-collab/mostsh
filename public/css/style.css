@@ -1,0 +1,110 @@
+/* Medical Identity CSS - Emergency Medical Management System */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+:root {
+    --primary-color: #0d47a1; /* Medical Blue */
+    --secondary-color: #1976d2;
+    --accent-color: #ff5252; /* For emergencies/alerts */
+    --text-main: #333333;
+    --text-light: #757575;
+    --bg-light: #f5f7fa;
+    --white: #ffffff;
+    --card-shadow: 0 4px 15px rgba(13, 71, 161, 0.08);
+    --hover-shadow: 0 6px 20px rgba(13, 71, 161, 0.12);
+}
+
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--primary-color) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: var(--white) !important;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255,255,255,0.5) !important;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
+
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--white);
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--hover-shadow);
+}
+
+.card-header {
+    background-color: var(--white);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-weight: 700;
+    color: var(--primary-color);
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-family: 'Tajawal', sans-serif;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-danger {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+}
+
+/* Auth Layout Specific Styling */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
