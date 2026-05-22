@@ -24,6 +24,9 @@ class HomeController extends Controller
 
         $res = $db->query("SELECT count(*) as total FROM visits WHERE status = 'in_treatment'");
         $in_treatment = $res ? $res->fetch(\PDO::FETCH_ASSOC)['total'] : 0;
+
+        $res = $db->query("SELECT count(*) as total FROM visits");
+        $total_visits = $res ? $res->fetch(\PDO::FETCH_ASSOC)['total'] : 0;
         
         $total_beds = 15;
         $available_beds = $total_beds - $in_treatment;
@@ -34,7 +37,8 @@ class HomeController extends Controller
             'user' => Application::$app->user,
             'active_cases' => $active_cases,
             'triage_cases' => $triage_cases,
-            'available_beds' => $available_beds
+            'available_beds' => $available_beds,
+            'total_visits' => $total_visits
         ];
         return $this->render('home', $params);
     }
