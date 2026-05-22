@@ -30,15 +30,14 @@ class Patient extends Model
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
         
-        $stmt->bind_param("ssssss", 
+        return $stmt->execute([
             $this->national_id, 
             $this->full_name, 
             $this->dob, 
             $this->gender, 
             $this->phone, 
             $this->address
-        );
-        return $stmt->execute();
+        ]);
     }
 
     public function findAll()
@@ -47,7 +46,7 @@ class Patient extends Model
         $result = Application::$app->db->query($sql);
         $patients = [];
         if ($result) {
-            while ($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
                 $patients[] = $row;
             }
         }

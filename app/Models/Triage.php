@@ -29,14 +29,13 @@ class Triage extends Model
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
         
-        $stmt->bind_param("iissss", 
+        return $stmt->execute([
             $this->visit_id, 
             $this->nurse_id, 
             $this->blood_pressure, 
             $this->heart_rate, 
             $this->temperature,
             $this->notes
-        );
-        return $stmt->execute();
+        ]);
     }
 }

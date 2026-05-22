@@ -20,7 +20,7 @@ class Setting extends Model
     public function initTable()
     {
         $sqlCreate = "CREATE TABLE IF NOT EXISTS settings (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             setting_key VARCHAR(100) NOT NULL UNIQUE,
             setting_value TEXT
         )";
@@ -28,7 +28,7 @@ class Setting extends Model
 
         // Seed defaults if empty
         $res = Application::$app->db->query("SELECT COUNT(*) as cnt FROM settings");
-        if ($res && $res->fetch_assoc()['cnt'] == 0) {
+        if ($res && $res->fetch(\PDO::FETCH_ASSOC)['cnt'] == 0) {
             $defaults = [
                 'hospital_name' => 'مركز الطوارئ الطبي الافتراضي',
                 'phone' => '920000000',
@@ -37,8 +37,7 @@ class Setting extends Model
             ];
             $stmt = Application::$app->db->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)");
             foreach ($defaults as $k => $v) {
-                $stmt->bind_param("ss", $k, $v);
-                $stmt->execute();
+                $stmt->execute([$k, $v]);
             }
         }
     }
@@ -48,7 +47,7 @@ class Setting extends Model
         $this->initTable();
         $res = Application::$app->db->query("SELECT * FROM settings");
         if ($res) {
-            while ($row = $res->fetch_assoc()) {
+            while ($row = $res->fetch(\PDO::FETCH_ASSOC)) {
                 $key = $row['setting_key'];
                 if (property_exists($this, $key)) {
                     $this->{$key} = $row['setting_value'];
@@ -63,8 +62,7 @@ class Setting extends Model
         $stmt = Application::$app->db->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = ?");
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
-                $stmt->bind_param("ss", $value, $key);
-                $stmt->execute();
+                $stmt->execute([$value, $key]);
             }
         }
         return true;

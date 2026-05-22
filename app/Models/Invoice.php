@@ -20,7 +20,7 @@ class Invoice extends Model
     public function initTable()
     {
         $sqlCreate = "CREATE TABLE IF NOT EXISTS invoices (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             visit_id INT NOT NULL,
             invoice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             subtotal DECIMAL(10,2) NOT NULL,
@@ -39,13 +39,12 @@ class Invoice extends Model
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
         
-        $stmt->bind_param("iddd", 
+        return $stmt->execute([
             $this->visit_id, 
             $this->subtotal, 
             $this->vat_amount, 
             $this->total_amount
-        );
-        return $stmt->execute();
+        ]);
     }
     
     public function findAll()
@@ -59,7 +58,7 @@ class Invoice extends Model
         $result = Application::$app->db->query($sql);
         $invoices = [];
         if ($result) {
-            while ($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
                 $invoices[] = $row;
             }
         }
@@ -71,7 +70,6 @@ class Invoice extends Model
         $sql = "UPDATE invoices SET status = 'paid' WHERE id = ?";
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
-        $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        return $stmt->execute([$id]);
     }
 }

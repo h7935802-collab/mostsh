@@ -25,7 +25,7 @@ class MedicalRecord extends Model
     {
         // Ensure table exists
         $sqlCreate = "CREATE TABLE IF NOT EXISTS medical_records (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             visit_id INT NOT NULL,
             doctor_id INT NOT NULL,
             diagnosis TEXT,
@@ -42,13 +42,12 @@ class MedicalRecord extends Model
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
         
-        $stmt->bind_param("iisss", 
+        return $stmt->execute([
             $this->visit_id, 
             $this->doctor_id, 
             $this->diagnosis, 
             $this->treatment_plan, 
             $this->prescriptions
-        );
-        return $stmt->execute();
+        ]);
     }
 }

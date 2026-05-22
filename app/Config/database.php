@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'driver' => 'pgsql',
     'host' => 'dpg-d8745rsm0tmc739hfrdg-a',
     'port' => 5432,
     'user' => 'ems_user',

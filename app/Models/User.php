@@ -30,14 +30,11 @@ class User extends Model
         $stmt = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $sql");
         if (!$stmt) return false;
 
-        $types = str_repeat('s', count($attributes));
         $values = array_values($where);
-        $stmt->bind_param($types, ...$values);
-        $stmt->execute();
+        $stmt->execute($values);
         
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($row) {
             $this->loadData($row);
             return $this;
         }
@@ -50,7 +47,7 @@ class User extends Model
         $result = Application::$app->db->query($sql);
         $users = [];
         if ($result) {
-            while ($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
                 $users[] = $row;
             }
         }
@@ -66,12 +63,11 @@ class User extends Model
         
         $hashed_password = password_hash($this->password_hash, PASSWORD_DEFAULT);
         
-        $stmt->bind_param("ssss", 
+        return $stmt->execute([
             $this->username, 
             $hashed_password, 
             $this->role, 
             $this->full_name
-        );
-        return $stmt->execute();
+        ]);
     }
 }

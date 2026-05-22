@@ -27,12 +27,11 @@ class Visit extends Model
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
         
-        $stmt->bind_param("iss", 
+        return $stmt->execute([
             $this->patient_id, 
             $this->status, 
             $this->priority
-        );
-        return $stmt->execute();
+        ]);
     }
 
     public function findAllWithPatients()
@@ -44,7 +43,7 @@ class Visit extends Model
         $result = Application::$app->db->query($sql);
         $visits = [];
         if ($result) {
-            while ($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
                 $visits[] = $row;
             }
         }
@@ -56,8 +55,7 @@ class Visit extends Model
         $sql = "UPDATE visits SET status = ? WHERE id = ?";
         $stmt = Application::$app->db->prepare($sql);
         if (!$stmt) return false;
-        $stmt->bind_param("si", $status, $id);
-        return $stmt->execute();
+        return $stmt->execute([$status, $id]);
     }
 
     public function findOne(int $id)
@@ -66,11 +64,10 @@ class Visit extends Model
                 FROM visits v JOIN patients p ON v.patient_id = p.id 
                 WHERE v.id = ?";
         $stmt = Application::$app->db->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($row) {
+            return $row;
         }
         return false;
     }

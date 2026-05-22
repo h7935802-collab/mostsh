@@ -88,7 +88,7 @@ class PatientController extends Controller
         ");
 
         if ($res) {
-            while ($row = $res->fetch_assoc()) {
+            while ($row = $res->fetch(\PDO::FETCH_ASSOC)) {
                 $visits[] = $row;
             }
         }

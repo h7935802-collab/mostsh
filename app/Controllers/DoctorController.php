@@ -46,8 +46,11 @@ class DoctorController extends Controller
         // Fetch triage data if exists
         $triageData = [];
         $res = Application::$app->db->query("SELECT * FROM triage WHERE visit_id = $visit_id ORDER BY created_at DESC LIMIT 1");
-        if ($res && $res->num_rows > 0) {
-            $triageData = $res->fetch_assoc();
+        if ($res) {
+            $row = $res->fetch(\PDO::FETCH_ASSOC);
+            if ($row) {
+                $triageData = $row;
+            }
         }
 
         if ($request->isPost()) {

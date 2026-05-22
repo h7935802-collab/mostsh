@@ -4,27 +4,26 @@ namespace App\Core;
 
 class Database
 {
-    public \mysqli $conn;
+    public \PDO $conn;
 
     public function __construct(array $config)
     {
-        // Suppress warnings from mysqli connect, we handle it
-        mysqli_report(MYSQLI_REPORT_OFF);
+        $driver = $config['driver'] ?? 'pgsql';
+        $host = $config['host'] ?? 'localhost';
+        $port = $config['port'] ?? 5432;
+        $dbname = $config['dbname'] ?? 'emc_db';
+        $user = $config['user'] ?? 'postgres';
+        $password = $config['password'] ?? '';
 
-        $this->conn = @new \mysqli(
-            $config['host'] ?? 'localhost',
-            $config['user'] ?? 'root',
-            $config['password'] ?? '',
-            $config['dbname'] ?? 'emc_db',
-            $config['port'] ?? 3306
-        );
+        $dsn = "$driver:host=$host;port=$port;dbname=$dbname";
 
-        if ($this->conn->connect_error) {
-            // For now, simple die. In production, maybe log it.
-            die("Database Connection failed. Please make sure MySQL is running and the database 'emc_db' exists.");
+        try {
+            $this->conn = new \PDO($dsn, $user, $password);
+            $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            die("Database Connection failed. Please check your credentials and make sure PostgreSQL is running.");
         }
-        
-        $this->conn->set_charset("utf8mb4");
     }
 
     public function prepare($sql)
