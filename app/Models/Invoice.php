@@ -26,7 +26,7 @@ class Invoice extends Model
             subtotal DECIMAL(10,2) NOT NULL,
             vat_amount DECIMAL(10,2) NOT NULL,
             total_amount DECIMAL(10,2) NOT NULL,
-            status ENUM('unpaid', 'paid') DEFAULT 'unpaid',
+            status VARCHAR(10) DEFAULT 'unpaid' CHECK (status IN ('unpaid', 'paid')),
             FOREIGN KEY (visit_id) REFERENCES visits(id) ON DELETE CASCADE
         )";
         Application::$app->db->query($sqlCreate);
